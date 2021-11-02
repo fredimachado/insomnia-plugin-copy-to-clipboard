@@ -1,4 +1,4 @@
-const electron = require("electron");
+const { clipboard } = require("electron");
 
 let propertyToCopy = null;
 
@@ -20,6 +20,9 @@ module.exports.templateTags = [{
 
 module.exports.responseHooks = [
     context => {
+        if (propertyToCopy == undefined || propertyToCopy === null || typeof propertyToCopy !== "string") {
+            return;
+        }
         if (context.response.getStatusCode() !== 200) {
             return;
         }
@@ -42,10 +45,12 @@ module.exports.responseHooks = [
             }
 
             if (typeof response === "string") {
-                electron.clipboard.write({
+                clipboard.write({
                     text: response
                 });
             }
+
+            propertyToCopy = null;
         } catch (error) {
             console.log(`Error copying response or property value to clipboard with message ${error.message}`, error);
             throw error;
