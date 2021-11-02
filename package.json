@@ -1,14 +1,11 @@
 {
   "name": "insomnia-plugin-copy-to-clipboard",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "insomnia": {
     "name": "copy-to-clipboard",
     "description": "Copy response or property value to the clipboard"
   },
   "main": "main.js",
   "author": "Fredi Machado",
-  "license": "MIT",
-  "dependencies": {
-    "electron": "^15.3.0"
-  }
+  "license": "MIT"
 }
