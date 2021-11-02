@@ -1,6 +1,6 @@
 {
   "name": "insomnia-plugin-copy-to-clipboard",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "insomnia": {
     "name": "copy-to-clipboard",
     "description": "Copy response or property value to the clipboard"
