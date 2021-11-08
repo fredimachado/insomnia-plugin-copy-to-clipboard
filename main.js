@@ -1,7 +1,5 @@
 const { clipboard } = require("electron");
 
-let propertyToCopy = null;
-
 module.exports.templateTags = [{
     name: "copy_to_clipboard",
     displayName: "Copy to Clipboard",
@@ -14,16 +12,26 @@ module.exports.templateTags = [{
         }
     ],
     async run(context, property) {
-        propertyToCopy = property;
+        const storageKey = `${context.meta.requestId}.propertyToCopy`;
+
+        console.log(`[copy-to-clipboard] Stored '${property}' under ${storageKey}`);
+        await context.store.setItem(storageKey, property || "");
+
+        return null;
     }
 }];
 
 module.exports.responseHooks = [
-    context => {
-        if (propertyToCopy == undefined || propertyToCopy === null || typeof propertyToCopy !== "string") {
+    async context => {
+        if (context.response.getStatusCode() !== 200) {
             return;
         }
-        if (context.response.getStatusCode() !== 200) {
+
+        const requestId = context.request.getId();
+        const storageKey = `${requestId}.propertyToCopy`;
+        let propertyToCopy = await context.store.getItem(storageKey);
+
+        if (!propertyToCopy && propertyToCopy !== "") {
             return;
         }
 
@@ -49,8 +57,6 @@ module.exports.responseHooks = [
                     text: response
                 });
             }
-
-            propertyToCopy = null;
         } catch (error) {
             console.log(`Error copying response or property value to clipboard with message ${error.message}`, error);
             throw error;
