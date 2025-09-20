@@ -1,5 +1,3 @@
-const { clipboard } = require("electron");
-
 module.exports.templateTags = [{
     name: "copy_to_clipboard",
     displayName: "Copy to Clipboard",
@@ -21,6 +19,8 @@ module.exports.templateTags = [{
     }
 }];
 
+// Throwing errors in the response hook no longer seems to work, it doesn't
+// bubble up, but instead gets replaced with a "parentId not found" error.
 module.exports.responseHooks = [
     async context => {
         if (context.response.getStatusCode() !== 200) {
@@ -46,7 +46,7 @@ module.exports.responseHooks = [
                 propertyToCopy = propertyToCopy.split(".");
                 for (var i = 0; i < propertyToCopy.length; i++) {
                     if (response[propertyToCopy[i]] == undefined) {
-                        throw new Error(`${propertyToCopy[i]} not found`);
+                        context.app.alert('Error', `${propertyToCopy[i]} not found`);
                     } else {
                         response = response[propertyToCopy[i]];
                     }
@@ -54,13 +54,10 @@ module.exports.responseHooks = [
             }
 
             if (typeof response === "string") {
-                clipboard.write({
-                    text: response
-                });
+                context.app.clipboard.writeText(response);
             }
         } catch (error) {
-            console.log(`Error copying response or property value to clipboard with message ${error.message}`, error);
-            throw error;
+            context.app.alert('Error', `Error copying response or property value to clipboard with message ${error.message}`);
         }
     }
 ];
