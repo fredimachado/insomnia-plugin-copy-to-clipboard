@@ -19,8 +19,6 @@ module.exports.templateTags = [{
     }
 }];
 
-// Throwing errors in the response hook no longer seems to work, it doesn't
-// bubble up, but instead gets replaced with a "parentId not found" error.
 module.exports.responseHooks = [
     async context => {
         if (context.response.getStatusCode() !== 200) {
