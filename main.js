@@ -37,7 +37,8 @@ module.exports.responseHooks = [
 
         try {
             let response = "";
-            let responseBody = context.response.getBody().toString("utf-8");
+            let responseBody = await context.response.getBody();
+            responseBody = responseBody.toString("utf-8");
             if (!propertyToCopy || propertyToCopy.length === 0) {
                 response = responseBody;
             } else {
