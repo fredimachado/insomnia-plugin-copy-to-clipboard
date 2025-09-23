@@ -12,7 +12,7 @@ This plugin requires [Insomnia](https://insomnia.rest/), the Open Source API cli
 2. Click "Application" -> "Preferences" and choose the "Plugins" tab,
 3. Enter `insomnia-plugin-copy-to-clipboard` and click "Install Plugin".
 
-    ![Plugin Installation](images/install.png)
+    ![Plugin Installation](https://raw.githubusercontent.com/fredimachado/insomnia-plugin-copy-to-clipboard/main/images/install.png)
 
 4. Close the dialog.
 
@@ -25,7 +25,7 @@ This plugin requires [Insomnia](https://insomnia.rest/), the Open Source API cli
 5. In "Property to copy" set the property you want to copy, or leave it blank to copy the entire response,
 6. Click done, cross your fingers and give it a go!
 
-    ![Usage](images/usage.gif)
+    ![Usage](https://raw.githubusercontent.com/fredimachado/insomnia-plugin-copy-to-clipboard/main/images/usage.gif)
 
 ## Limitations
 
