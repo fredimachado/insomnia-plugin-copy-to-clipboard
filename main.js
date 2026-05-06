@@ -12,7 +12,6 @@ module.exports.templateTags = [{
     async run(context, property) {
         const storageKey = `${context.meta.requestId}.propertyToCopy`;
 
-        console.log(`[copy-to-clipboard] Stored '${property}' under ${storageKey}`);
         await context.store.setItem(storageKey, property || "");
 
         return null;
@@ -21,7 +20,8 @@ module.exports.templateTags = [{
 
 module.exports.responseHooks = [
     async context => {
-        if (context.response.getStatusCode() !== 200) {
+        const statusCode = Number(context.response.getStatusCode());
+        if (!Number.isFinite(statusCode) || statusCode < 200 || statusCode >= 300) {
             return;
         }
 
@@ -42,18 +42,21 @@ module.exports.responseHooks = [
             } else {
                 response = JSON.parse(responseBody);
                 propertyToCopy = propertyToCopy.split(".");
-                for (var i = 0; i < propertyToCopy.length; i++) {
-                    if (response[propertyToCopy[i]] == undefined) {
+                for (let i = 0; i < propertyToCopy.length; i++) {
+                    const key = propertyToCopy[i];
+                    if (response === null || typeof response !== "object" || !Object.prototype.hasOwnProperty.call(response, key)) {
                         context.app.alert('Error', `${propertyToCopy[i]} not found`);
+                        return;
                     } else {
-                        response = response[propertyToCopy[i]];
+                        response = response[key];
                     }
                 }
             }
 
-            if (typeof response === "string") {
-                context.app.clipboard.writeText(response);
-            }
+            const textToCopy = typeof response === "string"
+                ? response
+                : (typeof response === "object" && response !== null ? JSON.stringify(response) : String(response));
+            context.app.clipboard.writeText(textToCopy);
         } catch (error) {
             context.app.alert('Error', `Error copying response or property value to clipboard with message ${error.message}`);
         }

@@ -23,13 +23,16 @@ This plugin requires [Insomnia](https://insomnia.rest/), the Open Source API cli
 3. Press Cmd/Ctrl + Space and choose "Copy To Clipboard",
 4. Click the "Copy To Clipboard" tag,
 5. In "Property to copy" set the property you want to copy, or leave it blank to copy the entire response,
-6. Click done, cross your fingers and give it a go!
+6. Click done and send the request.
 
     ![Usage](https://raw.githubusercontent.com/fredimachado/insomnia-plugin-copy-to-clipboard/main/images/usage.gif)
 
 ## Limitations
 
-* It only works with json objects when setting a property to copy
+* The response hook runs for any HTTP success status (`2XX`), not only `200`
+* Property paths (for example, `data.user.id`) require a JSON response body
+* Missing properties show an error alert and stop copying
+* Copied values are converted to text (`string` as-is, scalars via `String(...)`, objects/arrays via `JSON.stringify(...)`)
 
 ## Contributing
 
